@@ -1,0 +1,15 @@
+#
+# Security policy for the Nezaniel.Banking package
+#
+
+privilegeTargets:
+  'Neos\Neos\Security\Authorization\Privilege\ModulePrivilege':
+    'Nezaniel.Banking:BankManagement':
+      matcher: 'management/banking'
+
+roles:
+  'Neos.Neos:Editor':
+    privileges:
+      -
+        privilegeTarget: 'Nezaniel.Banking:BankManagement'
+        permission: GRANT

@@ -8,18 +8,14 @@ declare(strict_types=1);
 
 namespace Nezaniel\Banking\Domain\Accounting;
 
-use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateId;
 use Neos\Flow\Annotations as Flow;
-use Nezaniel\Banking\Domain\MonetaryAmount;
-use Nezaniel\Banking\Domain\TransactionDate;
+use Nezaniel\Banking\Domain\BankAccountNumber;
 
 #[Flow\Proxy(false)]
 final readonly class OpenBankAccount implements \JsonSerializable
 {
     public function __construct(
-        public NodeAggregateId $to,
-        public MonetaryAmount $amount,
-        public TransactionDate $startTime,
+        public BankAccountNumber $accountNumber,
     ) {
     }
 
@@ -29,9 +25,7 @@ final readonly class OpenBankAccount implements \JsonSerializable
     public static function fromArray(array $values): self
     {
         return new self(
-            NodeAggregateId::fromString($values['to']),
-            MonetaryAmount::fromArray($values['amount']),
-            new TransactionDate($values['startTime'])
+            new BankAccountNumber($values['accountNumber']),
         );
     }
 

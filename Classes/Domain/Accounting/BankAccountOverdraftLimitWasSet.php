@@ -10,13 +10,13 @@ namespace Nezaniel\Banking\Domain\Accounting;
 
 use Neos\Flow\Annotations as Flow;
 use Nezaniel\Banking\Domain\AccountOverdraftLimit;
-use Nezaniel\Banking\Domain\BankAccountId;
+use Nezaniel\Banking\Domain\BankAccountNumber;
 
 #[Flow\Proxy(false)]
 final readonly class BankAccountOverdraftLimitWasSet implements \JsonSerializable
 {
     public function __construct(
-        public BankAccountId $accountId,
+        public BankAccountNumber $accountNumber,
         public AccountOverdraftLimit $accountOverdraftLimit,
     ) {
     }
@@ -27,7 +27,7 @@ final readonly class BankAccountOverdraftLimitWasSet implements \JsonSerializabl
     public static function fromArray(array $values): self
     {
         return new self(
-            new BankAccountId($values['accountId']),
+            new BankAccountNumber($values['accountNumber']),
             AccountOverdraftLimit::fromArray($values['accountOverdraftLimit']),
         );
     }

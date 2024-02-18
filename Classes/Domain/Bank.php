@@ -8,42 +8,63 @@ declare(strict_types=1);
 
 namespace Nezaniel\Banking\Domain;
 
-use Neos\EventStore\DoctrineAdapter\DoctrineEventStore;
 use Neos\EventStore\EventStoreInterface;
+use Neos\EventStore\Model\EventStream\VirtualStreamName;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Persistence\Doctrine\ConnectionFactory;
 use Nezaniel\Banking\Domain\Accounting\BankAccountWasClosed;
 use Nezaniel\Banking\Domain\Accounting\BankAccountWasOpened;
 
-#[Flow\Scope('singleton')]
+#[Flow\Proxy(false)]
 final readonly class Bank
 {
     public function __construct(
-        private Currency $currency,
-        private ConnectionFactory $connectionFactory,
-        private string $eventTableName,
+        public string $id,
+        public Currency $currency,
+        private EventStoreInterface $eventStore,
     ) {
     }
 
-    public function findAccount(BankAccountId $accountId): BankAccount
+    public function setUp(): void
     {
-        $eventStore = new DoctrineEventStore(
-            $this->connectionFactory->create(),
-            $this->eventTableName
-        );
-        $this->requireAccountToExist($accountId, $eventStore);
+        $this->eventStore->setup();
+    }
+
+    public function findAccount(BankAccountNumber $accountNumber): BankAccount
+    {
+        $this->requireAccountToExist($accountNumber);
 
         return new BankAccount(
-            $accountId,
+            $accountNumber,
             $this->currency,
-            $eventStore
+            $this->eventStore
         );
     }
 
-    private function requireAccountToExist(BankAccountId $accountId, EventStoreInterface $eventStore): void
+    /**
+     * @return array<BankAccount>
+     */
+    public function findAllAccounts(): array
+    {
+        $availableAccountNumbers = [];
+        foreach ($this->eventStore->load(VirtualStreamName::all()) as $eventEnvelope) {
+            $event = BankingEventNormalizer::denormalizeEvent($eventEnvelope->event);
+            if ($event instanceof BankAccountWasOpened) {
+                $availableAccountNumbers[$event->accountNumber->value] = $event->accountNumber;
+            } elseif ($event instanceof BankAccountWasClosed) {
+                unset($availableAccountNumbers[$event->accountNumber->value]);
+            }
+        }
+
+        return array_map(
+            fn (BankAccountNumber $accountNumber): BankAccount => $this->findAccount($accountNumber),
+            $availableAccountNumbers
+        );
+    }
+
+    private function requireAccountToExist(BankAccountNumber $accountId): void
     {
         $accountExists = false;
-        foreach ($eventStore->load(BankAccountEventStreamNameFactory::create($accountId)) as $eventEnvelope) {
+        foreach ($this->eventStore->load(BankAccountEventStreamNameFactory::create($accountId)) as $eventEnvelope) {
             if ($eventEnvelope->event instanceof BankAccountWasOpened) {
                 $accountExists = true;
             } elseif ($eventEnvelope->event instanceof BankAccountWasClosed) {

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Nezaniel\Banking\Domain\MoneyTransfer;
 
 use Neos\Flow\Annotations as Flow;
-use Nezaniel\Banking\Domain\BankAccountId;
+use Nezaniel\Banking\Domain\BankAccountNumber;
 use Nezaniel\Banking\Domain\MonetaryAmount;
 use Nezaniel\Banking\Domain\TransactionDate;
 
@@ -17,7 +17,7 @@ use Nezaniel\Banking\Domain\TransactionDate;
 final readonly class MoneyWasTransferred implements \JsonSerializable
 {
     public function __construct(
-        public BankAccountId $to,
+        public BankAccountNumber $to,
         public MonetaryAmount $amount,
         public TransactionDate $startTime,
     ) {
@@ -29,7 +29,7 @@ final readonly class MoneyWasTransferred implements \JsonSerializable
     public static function fromArray(array $values): self
     {
         return new self(
-            new BankAccountId($values['to']),
+            new BankAccountNumber($values['to']),
             MonetaryAmount::fromArray($values['amount']),
             new TransactionDate($values['startTime'])
         );

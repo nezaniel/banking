@@ -12,7 +12,7 @@ use Neos\ContentRepository\Core\SharedModel\Id\UuidFactory;
 use Neos\Flow\Annotations as Flow;
 
 #[Flow\Proxy(false)]
-final readonly class BankAccountId implements \JsonSerializable
+final readonly class BankAccountNumber implements \JsonSerializable
 {
     public function __construct(
         public string $value

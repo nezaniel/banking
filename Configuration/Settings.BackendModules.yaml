@@ -1,0 +1,10 @@
+Neos:
+  Neos:
+    modules:
+      management:
+        submodules:
+          banking:
+            label: 'Banking'
+            description: 'The banking management module'
+            icon: 'fas fa-university'
+            controller: Nezaniel\Banking\Application\Controller\BankingManagementController

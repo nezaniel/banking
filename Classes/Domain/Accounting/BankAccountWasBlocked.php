@@ -9,14 +9,14 @@ declare(strict_types=1);
 namespace Nezaniel\Banking\Domain\Accounting;
 
 use Neos\Flow\Annotations as Flow;
-use Nezaniel\Banking\Domain\BankAccountId;
+use Nezaniel\Banking\Domain\BankAccountNumber;
 use Nezaniel\Banking\Domain\TransactionDate;
 
 #[Flow\Proxy(false)]
 final readonly class BankAccountWasBlocked implements \JsonSerializable
 {
     public function __construct(
-        public BankAccountId $id,
+        public BankAccountNumber $accountNumber,
         public TransactionDate $date,
         public ?string $reason,
     ) {
@@ -28,7 +28,7 @@ final readonly class BankAccountWasBlocked implements \JsonSerializable
     public static function fromArray(array $values): self
     {
         return new self(
-            new BankAccountId($values['id']),
+            new BankAccountNumber($values['accountNumber']),
             new TransactionDate($values['date']),
             $values['reason'] ?? null,
         );

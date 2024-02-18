@@ -6,6 +6,7 @@
         "neos/neos": "^9.0",
         "neos/eventstore": "~1.0.0",
         "neos/eventstore-doctrineadapter": "~1.0.0",
+        "nezaniel/componentview-backendmodulecomponents": "*",
         "php": "^8.2"
     },
     "require-dev": {

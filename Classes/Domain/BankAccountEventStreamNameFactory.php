@@ -14,7 +14,7 @@ use Neos\Flow\Annotations as Flow;
 #[Flow\Proxy(false)]
 final readonly class BankAccountEventStreamNameFactory
 {
-    public static function create(BankAccountId $accountId): StreamName
+    public static function create(BankAccountNumber $accountId): StreamName
     {
         return StreamName::fromString('Nezaniel.Banking:Bankaccount:' . $accountId->value);
     }
