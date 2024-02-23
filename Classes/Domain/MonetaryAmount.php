@@ -25,7 +25,7 @@ final readonly class MonetaryAmount implements \JsonSerializable
     public static function fromArray(array $values): self
     {
         return new self(
-            $values['value'],
+            (int)$values['value'],
             new Currency($values['currency'])
         );
     }

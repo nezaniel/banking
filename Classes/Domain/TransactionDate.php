@@ -30,6 +30,11 @@ final readonly class TransactionDate implements \JsonSerializable
         return \DateTimeImmutable::createFromInterface($date)->setTimezone(new \DateTimeZone('UTC'));
     }
 
+    public function format(string $format): string
+    {
+        return (new \DateTimeImmutable('@' . $this->value))->format($format);
+    }
+
     public function jsonSerialize(): int
     {
         return $this->value;

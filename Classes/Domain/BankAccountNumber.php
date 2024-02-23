@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Nezaniel\Banking\Domain;
 
 use Neos\ContentRepository\Core\SharedModel\Id\UuidFactory;
+use Neos\EventStore\Model\Event\StreamName;
 use Neos\Flow\Annotations as Flow;
 
 #[Flow\Proxy(false)]
@@ -28,6 +29,11 @@ final readonly class BankAccountNumber implements \JsonSerializable
     {
         return is_string($other) && $this->value === $other
             || $this->value === $other->value;
+    }
+
+    public function toStreamName(): StreamName
+    {
+        return StreamName::fromString('Nezaniel.Banking:Bankaccount:' . $this->value);
     }
 
     public function jsonSerialize(): string

@@ -16,6 +16,7 @@ final readonly class OpenBankAccount implements \JsonSerializable
 {
     public function __construct(
         public BankAccountNumber $accountNumber,
+        public ?string $holder,
     ) {
     }
 
@@ -26,6 +27,7 @@ final readonly class OpenBankAccount implements \JsonSerializable
     {
         return new self(
             new BankAccountNumber($values['accountNumber']),
+            $values['holder']
         );
     }
 

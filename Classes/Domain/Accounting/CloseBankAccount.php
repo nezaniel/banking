@@ -10,37 +10,22 @@ namespace Nezaniel\Banking\Domain\Accounting;
 
 use Neos\Flow\Annotations as Flow;
 use Nezaniel\Banking\Domain\BankAccountNumber;
-use Nezaniel\Banking\Domain\BankingEventContract;
-use Nezaniel\Banking\Domain\TransactionDate;
 
 #[Flow\Proxy(false)]
-final readonly class BankAccountWasBlocked implements BankingEventContract
+final readonly class CloseBankAccount implements \JsonSerializable
 {
     public function __construct(
         public BankAccountNumber $accountNumber,
-        public TransactionDate $date,
-        public ?string $reason,
     ) {
     }
 
     /**
      * @param array<string,mixed> $values
      */
-    public static function fromArray(array $values): static
+    public static function fromArray(array $values): self
     {
         return new self(
             new BankAccountNumber($values['accountNumber']),
-            new TransactionDate($values['date']),
-            $values['reason'] ?? null,
-        );
-    }
-
-    public static function fromCommand(BlockBankAccount $command): self
-    {
-        return new self(
-            $command->accountNumber,
-            TransactionDate::now(),
-            $command->reason
         );
     }
 
