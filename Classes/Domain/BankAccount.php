@@ -87,6 +87,9 @@ final readonly class BankAccount
     public function transferMoney(TransferMoney $command): void
     {
         $this->requireAccountToNotBeBlocked($this->number);
+        if ($command->to->equals($this->number)) {
+            throw new \DomainException('Cannot transfer money from an account to itself', 1708703031);
+        }
         $this->requireAccountToExist($command->to);
         $this->requireAccountToNotBeBlocked($command->to);
         if (!$this->getAccountOverdraftLimit()->covers($this->getBalance()->subtract($command->amount))) {

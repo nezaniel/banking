@@ -105,6 +105,7 @@ final readonly class Bank
     public function blockAccount(BlockBankAccount $command): void
     {
         $this->requireAccountToExist($command->accountNumber);
+        $this->requireAccountToNotBeTheBanksOwn($command->accountNumber);
         $this->requireAccountToNotBeBlocked($command->accountNumber);
 
         $this->eventStore->commit(
@@ -129,6 +130,7 @@ final readonly class Bank
     public function closeAccount(CloseBankAccount $command): void
     {
         $this->requireAccountToExist($command->accountNumber);
+        $this->requireAccountToNotBeTheBanksOwn($command->accountNumber);
 
         $this->eventStore->commit(
             $command->accountNumber->toStreamName(),
@@ -159,6 +161,13 @@ final readonly class Bank
             if ($event instanceof BankAccountWasOpened) {
                 throw new \DomainException('Given account does already exist', 1708636166);
             }
+        }
+    }
+
+    private function requireAccountToNotBeTheBanksOwn(BankAccountNumber $accountNumber): void
+    {
+        if ($accountNumber->equals($this->id)) {
+            throw new \DomainException('Given account is the bank\'s own', 1708702933);
         }
     }
 

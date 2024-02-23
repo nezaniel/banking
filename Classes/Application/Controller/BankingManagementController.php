@@ -160,56 +160,60 @@ class BankingManagementController extends AbstractModuleController
                                                         'Edit bank account',
                                                         LinkTarget::TARGET_SELF
                                                     ),
-                                                    $bankAccount->isBlocked()
-                                                        ? new Link(
-                                                            $this->getActionUri(
-                                                                'unblockBankAccount',
-                                                                [
-                                                                    'bankId' => $bankId,
-                                                                    'command' => [
-                                                                        'accountNumber' => $bankAccount->number->value
-                                                                    ]
-                                                                ]
-                                                            ),
-                                                            new Icon('unlock'),
-                                                            LinkVariant::VARIANT_PRIMARY_BUTTON,
-                                                            'Unlock bank account',
-                                                            LinkTarget::TARGET_SELF
-                                                        )
-                                                        : new Link(
-                                                            $this->getActionUri(
-                                                                'blockBankAccount',
-                                                                [
-                                                                    'bankId' => $bankId,
-                                                                    'command' => [
-                                                                        'accountNumber' => $bankAccount->number->value
-                                                                    ]
-                                                                ]
-                                                            ),
-                                                            new Icon('lock'),
-                                                            LinkVariant::VARIANT_PRIMARY_BUTTON,
-                                                            'Lock bank account',
-                                                            LinkTarget::TARGET_SELF
-                                                        ),
-                                                    new DangerButton(
-                                                        'bankaccount-' . $bankAccount->number->value,
-                                                        new Icon('trash-alt'),
-                                                    ),
-                                                    new Modal(
-                                                        'bankaccount-' . $bankAccount->number->value,
-                                                        'Confirm closing account ' . $bankAccount->number->value,
-                                                        'The account will be irrevocably closed',
-                                                        $this->getActionUri(
-                                                            'closeBankAccount',
-                                                            [
-                                                                'bankId' => $bankId,
-                                                                'command' => [
-                                                                    'accountNumber' => $bankAccount->number->value
-                                                                ]
-                                                            ]
-                                                        ),
-                                                        $this->securityContext->getCsrfProtectionToken(),
-                                                        'Close account',
+                                                    $bankAccount->number->equals($bankId)
+                                                        ? new ComponentCollection()
+                                                        : new ComponentCollection(
+                                                            $bankAccount->isBlocked()
+                                                                ? new Link(
+                                                                    $this->getActionUri(
+                                                                        'unblockBankAccount',
+                                                                        [
+                                                                            'bankId' => $bankId,
+                                                                            'command' => [
+                                                                                'accountNumber' => $bankAccount->number->value
+                                                                            ]
+                                                                        ]
+                                                                    ),
+                                                                    new Icon('unlock'),
+                                                                    LinkVariant::VARIANT_PRIMARY_BUTTON,
+                                                                    'Unlock bank account',
+                                                                    LinkTarget::TARGET_SELF
+                                                                )
+                                                                : new Link(
+                                                                    $this->getActionUri(
+                                                                        'blockBankAccount',
+                                                                        [
+                                                                            'bankId' => $bankId,
+                                                                            'command' => [
+                                                                                'accountNumber' => $bankAccount->number->value
+                                                                            ]
+                                                                        ]
+                                                                    ),
+                                                                    new Icon('lock'),
+                                                                    LinkVariant::VARIANT_PRIMARY_BUTTON,
+                                                                    'Lock bank account',
+                                                                    LinkTarget::TARGET_SELF
+                                                                ),
+                                                                new DangerButton(
+                                                                    'bankaccount-' . $bankAccount->number->value,
+                                                                    new Icon('trash-alt'),
+                                                                ),
+                                                                new Modal(
+                                                                    'bankaccount-' . $bankAccount->number->value,
+                                                                    'Confirm closing account ' . $bankAccount->number->value,
+                                                                    'The account will be irrevocably closed',
+                                                                    $this->getActionUri(
+                                                                        'closeBankAccount',
+                                                                        [
+                                                                            'bankId' => $bankId,
+                                                                            'command' => [
+                                                                                'accountNumber' => $bankAccount->number->value
+                                                                            ]
+                                                                        ]
+                                                                    ),
+                                                                    $this->securityContext->getCsrfProtectionToken(),
+                                                                    'Close account',
+                                                                )
                                                     )
                                                 )
                                             )
@@ -330,24 +334,28 @@ class BankingManagementController extends AbstractModuleController
                                     ),
                                     new Submit('Set overdraft limit')
                                 ),
-                                new Legend('Transfer money from bank'),
-                                new Form(
-                                    'transferMoney',
-                                    FormMethod::METHOD_POST,
-                                    $this->getActionUri('transferMoney'),
-                                    $this->formElementFactory->createCsrfProtectionHiddenField(),
-                                    new HiddenField('moduleArguments[bankId]', $bank->id),
-                                    new HiddenField('moduleArguments[accountNumber]', $bank->id),
-                                    new HiddenField('moduleArguments[command][to]', $account->number->value),
-                                    new HiddenField('moduleArguments[command][amount][currency]', $bank->currency->value),
-                                    new TextField(
-                                        'accountNumber',
-                                        'moduleArguments[command][amount][value]',
-                                        requiredStatement: new RequiredStatement(),
-                                        label: new Label('Amount (' . $bank->currency->value . ')'),
-                                    ),
-                                    new Submit('Transfer money')
-                                ),
+                                $account->number->equals($bankId)
+                                    ? new ComponentCollection()
+                                    : new ComponentCollection(
+                                        new Legend('Transfer money from bank'),
+                                        new Form(
+                                            'transferMoney',
+                                            FormMethod::METHOD_POST,
+                                            $this->getActionUri('transferMoney'),
+                                            $this->formElementFactory->createCsrfProtectionHiddenField(),
+                                            new HiddenField('moduleArguments[bankId]', $bank->id),
+                                            new HiddenField('moduleArguments[accountNumber]', $bank->id),
+                                            new HiddenField('moduleArguments[command][to]', $account->number->value),
+                                            new HiddenField('moduleArguments[command][amount][currency]', $bank->currency->value),
+                                            new TextField(
+                                                'accountNumber',
+                                                'moduleArguments[command][amount][value]',
+                                                requiredStatement: new RequiredStatement(),
+                                                label: new Label('Amount (' . $bank->currency->value . ')'),
+                                            ),
+                                            new Submit('Transfer money')
+                                        ),
+                                    )
                             ),
                             1
                         )

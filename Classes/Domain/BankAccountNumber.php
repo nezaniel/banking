@@ -27,8 +27,9 @@ final readonly class BankAccountNumber implements \JsonSerializable
 
     public function equals(self|string $other): bool
     {
-        return is_string($other) && $this->value === $other
-            || $this->value === $other->value;
+        return is_string($other)
+            ? $this->value === $other
+            : $this->value === $other->value;
     }
 
     public function toStreamName(): StreamName
