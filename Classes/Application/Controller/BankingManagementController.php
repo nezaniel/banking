@@ -32,6 +32,7 @@ use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\Form;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\FormMethod;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\HiddenField\HiddenField;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\Label;
+use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\RequiredStatement;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\Submit\Submit;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Form\TextField\TextField;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Icon\Icon;
@@ -52,7 +53,6 @@ use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Layout\FluidRow\
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Legend\Legend;
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Layout\Footer\Footer;
 use Nezaniel\ComponentView\Domain\ComponentCollection;
-use Nezaniel\Nortex\Presentation\Block\Form\RequiredStatement;
 
 #[Flow\Scope('singleton')]
 class BankingManagementController extends AbstractModuleController
@@ -130,8 +130,11 @@ class BankingManagementController extends AbstractModuleController
                                             new TableCell(
                                                 content: new Link(
                                                     $this->getActionUri(
-                                                        actionName: 'edit',
-                                                        parameters: ['accountNumber' => $bankAccount->number->value]
+                                                        actionName: 'editBankAccount',
+                                                        parameters: [
+                                                            'bankId' => $bankId,
+                                                            'accountNumber' => $bankAccount->number->value
+                                                        ]
                                                     ),
                                                     $bankAccount->number->value
                                                 )
