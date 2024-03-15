@@ -76,7 +76,7 @@ final readonly class Bank
 
         return array_map(
             fn (BankAccountNumber $accountNumber): BankAccount => $this->findAccount($accountNumber),
-            $availableAccountNumbers
+            array_values($availableAccountNumbers)
         );
     }
 
