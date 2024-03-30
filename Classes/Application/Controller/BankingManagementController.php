@@ -54,17 +54,14 @@ use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Block\Legend\Leg
 use Nezaniel\ComponentView\BackendModuleComponents\Presentation\Layout\Footer\Footer;
 use Nezaniel\ComponentView\Domain\ComponentCollection;
 
-#[Flow\Scope('singleton')]
 class BankingManagementController extends AbstractModuleController
 {
-    #[Flow\Inject]
-    protected FinancialDistrict $financialDistrict;
-
-    #[Flow\Inject]
-    protected FormElementFactory $formElementFactory;
-
-    #[Flow\Inject]
-    protected SecurityContext $securityContext;
+    public function __construct(
+        private readonly FinancialDistrict $financialDistrict,
+        private readonly FormElementFactory $formElementFactory,
+        private readonly SecurityContext $securityContext,
+    ) {
+    }
 
     public function indexAction(): string
     {

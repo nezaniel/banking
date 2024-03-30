@@ -12,7 +12,6 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 use Nezaniel\Banking\Domain\FinancialDistrict;
 
-#[Flow\Scope('singleton')]
 class BankingCommandController extends CommandController
 {
     #[Flow\Inject]

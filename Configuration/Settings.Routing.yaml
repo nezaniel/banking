@@ -1,0 +1,17 @@
+Neos:
+  Flow:
+    mvc:
+      routes:
+        'Nezaniel.Banking':
+          position: 'before Neos.Neos'
+          providerFactory: \Neos\Flow\Mvc\Routing\AttributeRoutesProviderFactory
+          providerOptions:
+            classNames:
+              - Nezaniel\Banking\Application\Controller\*
+
+Sitegeist:
+  SchemeOnYou:
+    documents:
+      banking:
+        classNames:
+          - 'Nezaniel\Banking\Application\Controller\*'

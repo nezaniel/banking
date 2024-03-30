@@ -7,6 +7,7 @@
         "neos/eventstore": "~1.0.0",
         "neos/eventstore-doctrineadapter": "~1.0.0",
         "nezaniel/componentview-backendmodulecomponents": "*",
+        "sitegeist/schemeonyou": "dev-flow9",
         "php": "^8.2"
     },
     "require-dev": {
